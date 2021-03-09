@@ -1,0 +1,31 @@
+cc_library_static {
+    name: "tflite_support",
+    sdk_version: "current",
+    min_sdk_version: "30",
+    stl: "libc++_static",
+    export_include_dirs: ["."],
+    srcs: [
+        "tensorflow_lite_support/cc/utils/common_utils.cc",
+    ],
+    cflags: [
+        "-Werror",
+        "-Wall",
+        "-O2",
+        "-Wno-missing-field-initializers",
+        "-Wno-unused-parameter",
+        "-Wno-unused-variable",
+    ],
+    header_libs: [
+        "tensorflow_headers",
+    ],
+    static_libs: [
+        "libtextclassifier_abseil",
+        "libtflite_static",
+    ],
+    apex_available: [
+        "//apex_available:platform",
+        "com.android.extservices",
+    ],
+
+    visibility: ["//external/libtextclassifier:__subpackages__"],
+}
