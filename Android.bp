@@ -6,6 +6,10 @@ cc_library_static {
     export_include_dirs: ["."],
     srcs: [
         "tensorflow_lite_support/cc/utils/common_utils.cc",
+        "tensorflow_lite_support/custom_ops/kernel/sentencepiece/sentencepiece_tokenizer_tflite.cc",
+        "tensorflow_lite_support/custom_ops/kernel/sentencepiece/optimized_encoder.cc",
+        "tensorflow_lite_support/custom_ops/kernel/ragged/ragged_range_tflite.cc",
+        "tensorflow_lite_support/custom_ops/kernel/ragged/ragged_tensor_to_tensor_tflite.cc",
     ],
     cflags: [
         "-Werror",
@@ -15,8 +19,13 @@ cc_library_static {
         "-Wno-unused-parameter",
         "-Wno-unused-variable",
     ],
+    generated_headers: [
+        "tflite_support_spm_config",
+        "tflite_support_spm_encoder_config"
+    ],
     header_libs: [
         "tensorflow_headers",
+        "flatbuffer_headers",
     ],
     static_libs: [
         "libtextclassifier_abseil",
@@ -28,4 +37,31 @@ cc_library_static {
     ],
 
     visibility: ["//external/libtextclassifier:__subpackages__"],
+}
+
+
+// -----------------
+// Generate headers with FlatBuffer schema compiler.
+// -----------------
+genrule_defaults {
+    name: "tflite_support_fbgen",
+    tools: ["flatc"],
+    // "depfile" is used here in conjunction with flatc's -M to gather the deps
+    cmd: "$(location flatc) --cpp --no-union-value-namespacing --gen-object-api --keep-prefix -I external/tflite-support -M $(in) >$(depfile) && " +
+        "$(location flatc) --cpp --no-union-value-namespacing --gen-object-api --keep-prefix -I external/tflite-support -o $$(dirname $(out)) $(in)",
+    depfile: true,
+}
+
+genrule {
+    name: "tflite_support_spm_config",
+    srcs: ["tensorflow_lite_support/custom_ops/kernel/sentencepiece/config.fbs"],
+    out: ["tensorflow_lite_support/custom_ops/kernel/sentencepiece/config_generated.h"],
+    defaults: ["tflite_support_fbgen"],
+}
+
+genrule {
+    name: "tflite_support_spm_encoder_config",
+    srcs: ["tensorflow_lite_support/custom_ops/kernel/sentencepiece/encoder_config.fbs"],
+    out: ["tensorflow_lite_support/custom_ops/kernel/sentencepiece/encoder_config_generated.h"],
+    defaults: ["tflite_support_fbgen"],
 }
