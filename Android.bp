@@ -35,6 +35,7 @@ license {
 cc_defaults {
     name: "tflite_support_defaults",
     cflags: [
+        "-Wno-ignored-qualifiers",
         "-Wno-missing-field-initializers",
         "-Wno-unused-parameter",
         "-Wno-unused-variable",
@@ -85,13 +86,12 @@ cc_library_static {
 cc_library_static {
     name: "tflite_support_tokenizers",
     srcs: [
-        "tensorflow_lite_support/cc/text/tokenizers/regex_tokenizer.cc",
-        "tensorflow_lite_support/cc/utils/common_utils.cc",
         "tensorflow_lite_support/cc/task/core/task_utils.cc",
+        "tensorflow_lite_support/cc/text/tokenizers/regex_tokenizer.cc",
+        "tensorflow_lite_support/cc/text/tokenizers/tokenizer_utils.cc",
+        "tensorflow_lite_support/cc/utils/common_utils.cc",
     ],
-    defaults: [
-        "tflite_support_defaults",
-    ],
+    defaults: ["tflite_support_defaults"],
     stl: "libc++_static",
     sdk_version: "current",
     min_sdk_version: "30",
@@ -100,15 +100,16 @@ cc_library_static {
         // TODO (ag/17748161): Create target for just TFLite headers and use here.
         "tensorflow_headers",
         "flatbuffer_headers",
+        "libtextclassifier_flatbuffer_headers",
     ],
-    generated_headers: [
-        "tflite_support_metadata_schema",
-    ],
+    generated_headers: ["tflite_support_metadata_schema"],
     static_libs: [
+        "libtextclassifier_bert_tokenizer",
         "libtextclassifier_abseil",
         "libtflite_static",
     ],
     apex_available: [
+        "//apex_available:platform",
         "com.android.adservices",
     ],
 }
@@ -116,14 +117,10 @@ cc_library_static {
 cc_test {
     name: "tflite_support_tokenizer_tests",
     srcs: [
-        "tensorflow_lite_support/cc/test/text/**/*.cc",
+        "tensorflow_lite_support/cc/test/text/regex_tokenizer_test.cc",
     ],
-    defaults: [
-        "tflite_support_defaults",
-    ],
-    data: [
-        "tensorflow_lite_support/cc/test/testdata/task/text/**/*.txt",
-    ],
+    defaults: ["tflite_support_defaults"],
+    data: ["tensorflow_lite_support/cc/test/testdata/task/text/**/*.txt"],
     stl: "libc++_static",
     sdk_version: "current",
     min_sdk_version: "30",
@@ -138,13 +135,162 @@ cc_test {
         "tensorflow_headers",
         "flatbuffer_headers",
     ],
+    generated_headers: ["tflite_support_metadata_schema"],
+}
+
+cc_library_static {
+    name: "tflite_support_classifiers",
+    srcs: [
+        "tensorflow_lite_support/cc/task/text/nlclassifier/**/*.cc",
+        "tensorflow_lite_support/cc/common.cc",
+        "tensorflow_lite_support/cc/port/default/tflite_wrapper.cc",
+        "tensorflow_lite_support/cc/port/default/statusor.cc",
+    ],
+    defaults: ["tflite_support_defaults"],
+    stl: "libc++_static",
+    sdk_version: "current",
+    min_sdk_version: "30",
+    export_include_dirs: ["."],
+    header_libs: [
+        // TODO (ag/17748161): Create target for just TFLite headers and use here.
+        "tensorflow_headers",
+        "flatbuffer_headers",
+    ],
+    generated_headers: ["tflite_support_metadata_schema"],
+    static_libs: [
+        "libtextclassifier_abseil",
+        "libtflite_static",
+        "tflite_configuration_proto",
+        "tflite_support_task_core_proto",
+        "tflite_support_tokenizers",
+    ],
+    apex_available: [
+        "//apex_available:platform",
+        "com.android.adservices",
+    ],
+}
+
+cc_library_static {
+    name: "tflite_support_metadata_extractor",
+    srcs: [
+        "tensorflow_lite_support/metadata/cc/metadata_extractor.cc",
+        "tensorflow_lite_support/metadata/cc/utils/zip_readonly_mem_file.cc",
+    ],
+    defaults: ["tflite_support_defaults"],
+    stl: "libc++_static",
+    sdk_version: "current",
+    min_sdk_version: "30",
+    export_include_dirs: ["."],
+    header_libs: [
+        // TODO (ag/17748161): Create target for just TFLite headers and use here.
+        "tensorflow_headers",
+        "flatbuffer_headers",
+        "libtextclassifier_flatbuffer_headers",
+    ],
     generated_headers: [
+        "libtflite_mutable_schema",
+        "tflite_support_metadata_schema",
+    ],
+    static_libs: [
+        "libtextclassifier_abseil",
+        "tflite_support_libz",
+    ],
+    apex_available: [
+        "//apex_available:platform",
+        "com.android.adservices",
+    ],
+}
+
+cc_library_static {
+    name: "tflite_support_task_core",
+    srcs: ["tensorflow_lite_support/cc/task/core/**/*.cc"],
+    defaults: ["tflite_support_defaults"],
+    stl: "libc++_static",
+    sdk_version: "current",
+    min_sdk_version: "30",
+    export_include_dirs: ["."],
+    header_libs: [
+        // TODO (ag/17748161): Create target for just TFLite headers and use here.
+        "tensorflow_headers",
+        "flatbuffer_headers",
+        "libtextclassifier_flatbuffer_headers",
+    ],
+    generated_headers: [
+        "libtflite_mutable_schema",
+        "tflite_support_metadata_schema",
+    ],
+    static_libs: [
+        "libtextclassifier_abseil",
+        "tflite_configuration_proto",
+        "tflite_support_task_core_proto",
+    ],
+    apex_available: [
+        "//apex_available:platform",
+        "com.android.adservices",
+    ],
+}
+
+cc_test {
+    name: "tflite_support_classifier_tests",
+    srcs: [
+        "tensorflow_lite_support/cc/test/task/text/bert_nl_classifier_test.cc",
+    ],
+    data: ["tensorflow_lite_support/cc/test/testdata/task/text/**/*.tflite"],
+    defaults: [
+        "tflite_support_defaults",
+    ],
+    stl: "libc++_static",
+    sdk_version: "current",
+    min_sdk_version: "30",
+    shared_libs: [
+        "liblog",
+    ],
+    static_libs: [
+        "libprotobuf-cpp-lite-ndk",
+        "libtextclassifier_abseil",
+        "libtextclassifier_bert_tokenizer",
+        "libtflite_static",
+        "libgmock_ndk",
+        "libbase_ndk",
+        "tflite_configuration_proto",
+        "tflite_support_classifiers",
+        "tflite_support_libz",
+        "tflite_support_metadata_extractor",
+        "tflite_support_task_core",
+        "tflite_support_task_core_proto",
+        "tflite_support_tokenizers",
+    ],
+    header_libs: [
+        // TODO (ag/17748161): Create target for just TFLite headers and use here.
+        "tensorflow_headers",
+        "flatbuffer_headers",
+        "liblog_headers",
+        "libtextclassifier_flatbuffer_headers",
+    ],
+    generated_headers: [
+        "libtflite_mutable_schema",
         "tflite_support_metadata_schema",
     ],
 }
 
-// TODO (ag/17748161): Add back build targets for NLClassifier.
+cc_library_static {
+    name: "tflite_support_task_core_proto",
+    proto: {
+        type: "lite",
+        canonical_path_from_root: false,
+        export_proto_headers: true,
+    },
+    stl: "libc++",
+    srcs: ["tensorflow_lite_support/cc/task/core/proto/**/*.proto"],
+    sdk_version: "current",
+    min_sdk_version: "30",
+    apex_available: [
+        "//apex_available:platform",
+        "com.android.adservices",
+    ],
+}
 
+// Add header file targets.
 genrule {
     name: "tflite_support_metadata_schema",
     srcs: ["tensorflow_lite_support/metadata/metadata_schema.fbs"],
