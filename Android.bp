@@ -78,9 +78,29 @@ cc_library_static {
     apex_available: [
         "//apex_available:platform",
         "com.android.extservices",
+        "com.android.adservices",
     ],
 
     visibility: ["//external/libtextclassifier:__subpackages__"],
+}
+
+java_library {
+    name: "tflite_support_java",
+    sdk_version: "current",
+    min_sdk_version: "30",
+    srcs: [
+        "tensorflow_lite_support/java/src/java/org/tensorflow/lite/support/**/*.java",
+    ],
+    libs: [
+        "guava-android-annotation-stubs",
+    ],
+    static_libs: [
+        "tensorflowlite_java",
+    ],
+    apex_available: [
+        "//apex_available:platform",
+        "com.android.adservices",
+    ],
 }
 
 cc_library_static {
@@ -163,6 +183,87 @@ cc_library_static {
         "tflite_configuration_proto",
         "tflite_support_task_core_proto",
         "tflite_support_tokenizers",
+        "tflite_support_metadata_extractor",
+    ],
+    apex_available: [
+        "//apex_available:platform",
+        "com.android.adservices",
+    ],
+}
+
+java_library {
+    name: "tflite_support_classifiers_java",
+    sdk_version: "current",
+    min_sdk_version: "30",
+    srcs: [
+        "tensorflow_lite_support/java/src/java/org/tensorflow/lite/task/text/nlclassifier/**/*.java",
+    ],
+    static_libs: [
+        "auto_value_annotations",
+        "tflite_support_java",
+        "tflite_support_base_task_api_java",
+    ],
+    plugins: [
+        "auto_value_plugin",
+    ],
+    apex_available: [
+        "//apex_available:platform",
+        "com.android.adservices",
+    ],
+}
+
+cc_library_shared {
+    name: "tflite_support_classifiers_native",
+    srcs: [
+        "tensorflow_lite_support/java/src/native/task/text/nlclassifier/bert_nlclassifier/bert_nl_classifier_jni.cc",
+        "tensorflow_lite_support/java/src/native/task/text/nlclassifier/nl_classifier_jni.cc",
+        "tensorflow_lite_support/java/src/native/task/text/nlclassifier/nl_classifier_jni_utils.cc",
+        "tensorflow_lite_support/java/src/native/task/core/builtin_op_resolver.cc",
+        "tensorflow_lite_support/cc/utils/jni_utils.cc",
+    ],
+    shared_libs: ["liblog"],
+    static_libs: [
+        "libprotobuf-cpp-lite-ndk",
+        "libtextclassifier_abseil",
+        "libtextclassifier_bert_tokenizer",
+        "libtflite_static",
+        "tflite_configuration_proto",
+        "tflite_support_classifiers",
+        "tflite_support_libz",
+        "tflite_support_metadata_extractor",
+        "tflite_support_task_core",
+        "tflite_support_task_core_proto",
+        "tflite_support_tokenizers",
+    ],
+    header_libs: [
+        // TODO (ag/17748161): Create target for just TFLite headers and use here.
+        "tensorflow_headers",
+        "flatbuffer_headers",
+        "jni_headers",
+        "liblog_headers",
+        "libtextclassifier_flatbuffer_headers",
+    ],
+    generated_headers: [
+        "libtflite_mutable_schema",
+        "tflite_support_metadata_schema",
+    ],
+    defaults: ["tflite_support_defaults"],
+    stl: "libc++_static",
+    sdk_version: "current",
+    min_sdk_version: "30",
+    export_include_dirs: ["."],
+    apex_available: [
+        "//apex_available:platform",
+        "com.android.adservices",
+    ],
+}
+
+java_library {
+    name: "tflite_support_base_task_api_java",
+    sdk_version: "current",
+    min_sdk_version: "30",
+    srcs: [
+        "tensorflow_lite_support/java/src/java/org/tensorflow/lite/task/core/*.java",
     ],
     apex_available: [
         "//apex_available:platform",
@@ -213,7 +314,6 @@ cc_library_static {
         // TODO (ag/17748161): Create target for just TFLite headers and use here.
         "tensorflow_headers",
         "flatbuffer_headers",
-        "libtextclassifier_flatbuffer_headers",
     ],
     generated_headers: [
         "libtflite_mutable_schema",
