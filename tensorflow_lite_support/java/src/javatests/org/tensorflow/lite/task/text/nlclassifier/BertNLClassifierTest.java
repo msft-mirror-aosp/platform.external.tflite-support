@@ -18,8 +18,10 @@ package org.tensorflow.lite.task.text.nlclassifier;
 import static com.google.common.truth.Truth.assertThat;
 
 import androidx.test.core.app.ApplicationProvider;
+
 import java.io.IOException;
 import java.util.List;
+
 import org.junit.Test;
 import org.tensorflow.lite.support.label.Category;
 import org.tensorflow.lite.task.core.TestUtils;
@@ -38,14 +40,16 @@ public class BertNLClassifierTest {
     @Test
     public void createFromPath_verifyResults() throws IOException {
         verifyResults(
-                BertNLClassifier.createFromFile(ApplicationProvider.getApplicationContext(), MODEL_FILE));
+                BertNLClassifier.createFromFile(ApplicationProvider.getApplicationContext(),
+                        MODEL_FILE));
     }
 
     @Test
     public void createFromFile_verifyResults() throws IOException {
         verifyResults(
                 BertNLClassifier.createFromFile(
-                        TestUtils.loadFile(ApplicationProvider.getApplicationContext(), MODEL_FILE)));
+                        TestUtils.loadFile(ApplicationProvider.getApplicationContext(),
+                                MODEL_FILE)));
     }
 
     @Test
@@ -61,6 +65,14 @@ public class BertNLClassifierTest {
                 BertNLClassifier.createFromBuffer(
                         TestUtils.loadToDirectByteBuffer(
                                 ApplicationProvider.getApplicationContext(), MODEL_FILE)));
+    }
+
+    @Test
+    public void getVersion_succeedsWithVersionInMetadata() throws IOException {
+        BertNLClassifier classifier = BertNLClassifier.createFromFile(
+                ApplicationProvider.getApplicationContext(), MODEL_FILE);
+
+        assertThat(classifier.getVersion()).isEqualTo("v1");
     }
 
     private void verifyResults(BertNLClassifier classifier) {
