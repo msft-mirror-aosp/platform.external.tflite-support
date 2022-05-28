@@ -42,7 +42,7 @@ import org.tensorflow.lite.task.core.TaskJniUtils.EmptyHandleProvider;
  * </ul>
  */
 public class BertNLClassifier extends BaseTaskApi {
-  private static final String BERT_NL_CLASSIFIER_NATIVE_LIBNAME = "task_text_jni";
+  private static final String BERT_NL_CLASSIFIER_NATIVE_LIBNAME = "tflite_support_classifiers_native";
 
   /**
    * Constructor to initialize the JNI with a pointer from C++.
