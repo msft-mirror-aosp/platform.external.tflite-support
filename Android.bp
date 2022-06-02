@@ -373,6 +373,57 @@ cc_test {
     ],
 }
 
+android_test {
+    name: "TfliteSupportClassifierTests",
+    srcs: [
+        "tensorflow_lite_support/java/src/javatests/org/tensorflow/lite/task/text/nlclassifier/BertNLClassifierTest.java",
+    ],
+    asset_dirs: [
+        "tensorflow_lite_support/java/src/javatests/testdata/task/text",
+    ],
+    defaults: ["modules-utils-testable-device-config-defaults"],
+    manifest: "tensorflow_lite_support/java/AndroidManifest.xml",
+    sdk_version: "module_current",
+    min_sdk_version: "30",
+    static_libs: [
+        "androidx.test.core",
+        "tensorflowlite_java",
+        "truth-prebuilt",
+        "tflite_support_classifiers_java",
+        "tflite_support_test_utils_java",
+    ],
+    libs: [
+        "android.test.base",
+        "android.test.mock.stubs",
+    ],
+    test_suites: [
+        "general-tests",
+    ],
+    jni_libs: [
+        "libtflite_support_classifiers_native",
+    ],
+    aaptflags: [
+        // Avoid compression on tflite files as the Interpreter
+        // can not load compressed flat buffer formats.
+        // (*appt compresses all assets into the apk by default)
+        // See https://elinux.org/Android_aapt for more detail.
+        "-0 .tflite",
+    ],
+}
+
+java_library_static {
+    name: "tflite_support_test_utils_java",
+    sdk_version: "module_current",
+    min_sdk_version: "30",
+    srcs: [
+        "tensorflow_lite_support/java/src/javatests/org/tensorflow/lite/task/core/TestUtils.java",
+    ],
+    static_libs: [
+        "apache-commons-compress",
+        "guava",
+    ],
+}
+
 cc_library_static {
     name: "tflite_support_task_core_proto",
     proto: {
