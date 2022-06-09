@@ -15,6 +15,8 @@ limitations under the License.
 #ifndef TENSORFLOW_LITE_SUPPORT_METADATA_CC_METADATA_EXTRACTOR_H_
 #define TENSORFLOW_LITE_SUPPORT_METADATA_CC_METADATA_EXTRACTOR_H_
 
+#include <string>
+
 #include "absl/container/flat_hash_map.h"
 #include "absl/status/status.h"
 #include "absl/strings/string_view.h"
@@ -126,6 +128,9 @@ class ModelMetadataExtractor {
   // Gets the output process unit specified by the given index, or nullptr in
   // case there is no output process unit or the index is out of range.
   const tflite::ProcessUnit* GetOutputProcessUnit(int index) const;
+
+  // Gets the model version, or "NO_VERSION_INFO" in case there is no version.
+  std::string GetVersion() const;
 
   // Gets the count of output process units. In particular, 0 is returned when
   // there is no output process units.

@@ -25,6 +25,8 @@ namespace nlclassifier {
 
 jobject RunClassifier(JNIEnv* env, jlong native_handle, jstring text);
 
+jstring GetVersionNative(JNIEnv* env, jlong native_handle);
+
 }  // namespace nlclassifier
 }  // namespace text
 }  // namespace task
