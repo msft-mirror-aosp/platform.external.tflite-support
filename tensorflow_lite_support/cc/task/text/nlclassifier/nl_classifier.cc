@@ -184,6 +184,10 @@ std::vector<Category> NLClassifier::Classify(const std::string& text) {
   return Infer(text).value();
 }
 
+std::string NLClassifier::GetVersion() const {
+  return GetMetadataExtractor()->GetVersion();
+}
+
 absl::Status NLClassifier::Preprocess(
     const std::vector<TfLiteTensor*>& input_tensors, const std::string& input) {
   TfLiteTensor* input_tensor = FindTensorWithNameOrIndex(

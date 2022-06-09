@@ -27,6 +27,7 @@ using ::tflite::support::utils::kInvalidPointer;
 using ::tflite::support::utils::ThrowException;
 using ::tflite::task::text::nlclassifier::BertNLClassifier;
 using ::tflite::task::text::nlclassifier::RunClassifier;
+using ::tflite::task::text::nlclassifier::GetVersionNative;
 
 extern "C" JNIEXPORT void JNICALL
 Java_org_tensorflow_lite_task_text_nlclassifier_BertNLClassifier_deinitJni(
@@ -69,6 +70,12 @@ extern "C" JNIEXPORT jobject JNICALL
 Java_org_tensorflow_lite_task_text_nlclassifier_BertNLClassifier_classifyNative(
     JNIEnv* env, jclass clazz, jlong native_handle, jstring text) {
   return RunClassifier(env, native_handle, text);
+}
+
+extern "C" JNIEXPORT jstring JNICALL
+Java_org_tensorflow_lite_task_text_nlclassifier_BertNLClassifier_getVersionNative(
+    JNIEnv* env, jclass clazz, jlong native_handle) {
+  return GetVersionNative(env, native_handle);
 }
 
 }  // namespace
