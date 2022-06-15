@@ -35,6 +35,7 @@ namespace metadata {
 
 namespace {
 constexpr char kMetadataBufferName[] = "TFLITE_METADATA";
+constexpr char kNoVersionInfo[] = "NO_VERSION_INFO";
 
 using ::absl::StatusCode;
 using ::flatbuffers::Offset;
@@ -378,6 +379,14 @@ int ModelMetadataExtractor::GetOutputProcessUnitsCount() const {
   const Vector<flatbuffers::Offset<tflite::ProcessUnit>>* output_process_units =
       GetOutputProcessUnits();
   return output_process_units == nullptr ? 0 : output_process_units->size();
+}
+
+std::string ModelMetadataExtractor::GetVersion() const {
+  if (model_metadata_ == nullptr ||
+      model_metadata_->version() == nullptr) {
+    return kNoVersionInfo;
+  }
+  return model_metadata_->version()->str();
 }
 
 }  // namespace metadata
