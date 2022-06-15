@@ -81,7 +81,7 @@ StatusOr<absl::string_view> CheckAndLoadFirstAssociatedFile(
   return vocab_buffer;
 }
 
-StatusOr<std::unique_ptr<RegexTokenizer>> CreateRegexTokenizerFromProcessUnit(
+StatusOr<std::unique_ptr<Tokenizer>> CreateRegexTokenizerFromProcessUnit(
     const tflite::ProcessUnit* tokenizer_process_unit,
     const tflite::metadata::ModelMetadataExtractor* metadata_extractor) {
   if (metadata_extractor == nullptr || tokenizer_process_unit == nullptr) {
@@ -182,10 +182,6 @@ std::vector<Category> NLClassifier::Classify(const std::string& text) {
   // The NLClassifier implementation for Preprocess() and Postprocess() never
   // returns errors: just call value().
   return Infer(text).value();
-}
-
-std::string NLClassifier::GetVersion() const {
-  return GetMetadataExtractor()->GetVersion();
 }
 
 absl::Status NLClassifier::Preprocess(
@@ -451,13 +447,16 @@ bool NLClassifier::HasRegexTokenizerMetadata() {
 
 absl::Status NLClassifier::SetupRegexTokenizer() {
   ASSIGN_OR_RETURN(
-      tokenizer_,
+      std::unique_ptr<Tokenizer> base_tokenizer,
       CreateRegexTokenizerFromProcessUnit(
           GetMetadataExtractor()
               ->GetInputTensorMetadata(kRegexTokenizerInputTensorIndex)
               ->process_units()
               ->Get(kRegexTokenizerProcessUnitIndex),
           GetMetadataExtractor()));
+
+  tokenizer_ = std::unique_ptr<RegexTokenizer>(
+      dynamic_cast<RegexTokenizer*>(base_tokenizer.release()));
 
   return absl::OkStatus();
 }

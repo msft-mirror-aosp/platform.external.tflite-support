@@ -112,9 +112,6 @@ class NLClassifier : public core::BaseTaskApi<std::vector<core::Category>,
   // Performs classification on a string input, returns classified results.
   std::vector<core::Category> Classify(const std::string& text);
 
-  // Gets the model version, or "NO_VERSION_INFO" in case there is no version.
-  std::string GetVersion() const;
-
  protected:
   static constexpr int kOutputTensorIndex = 0;
   static constexpr int kOutputTensorLabelFileIndex = 0;
