@@ -68,11 +68,19 @@ public class BertNLClassifierTest {
     }
 
     @Test
-    public void getVersion_succeedsWithVersionInMetadata() throws IOException {
+    public void getModelVersion_succeedsWithVersionInMetadata() throws IOException {
         BertNLClassifier classifier = BertNLClassifier.createFromFile(
                 ApplicationProvider.getApplicationContext(), MODEL_FILE);
 
-        assertThat(classifier.getVersion()).isEqualTo("v1");
+        assertThat(classifier.getModelVersion()).isEqualTo("v1");
+    }
+
+    @Test
+    public void getLabelsVersion_succeedsWithNoVersionInMetadata() throws IOException {
+        BertNLClassifier classifier = BertNLClassifier.createFromFile(
+                ApplicationProvider.getApplicationContext(), MODEL_FILE);
+
+        assertThat(classifier.getLabelsVersion()).isEqualTo("NO_VERSION_INFO");
     }
 
     private void verifyResults(BertNLClassifier classifier) {
