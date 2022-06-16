@@ -152,6 +152,9 @@ table AssociatedFile {
   // Leverage this in order to specify e.g multiple label files translated in
   // different languages.
   locale:string;
+
+  // Version of the file specified by model creators.
+  version:string;
 }
 
 // The basic content type for all tensors.
