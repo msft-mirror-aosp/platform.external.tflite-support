@@ -50,6 +50,16 @@ jobject RunClassifier(JNIEnv* env, jlong native_handle, jstring text) {
       });
 }
 
+jstring GetModelVersionNative(JNIEnv* env, jlong native_handle) {
+  auto* nl_classifier = reinterpret_cast<NLClassifier*>(native_handle);
+  return env->NewStringUTF(nl_classifier->GetModelVersion().c_str());
+}
+
+jstring GetLabelsVersionNative(JNIEnv* env, jlong native_handle) {
+  auto* nl_classifier = reinterpret_cast<NLClassifier*>(native_handle);
+  return env->NewStringUTF(nl_classifier->GetLabelsVersion().c_str());
+}
+
 }  // namespace nlclassifier
 }  // namespace text
 }  // namespace task
