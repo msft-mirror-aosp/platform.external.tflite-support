@@ -113,7 +113,10 @@ class NLClassifier : public core::BaseTaskApi<std::vector<core::Category>,
   std::vector<core::Category> Classify(const std::string& text);
 
   // Gets the model version, or "NO_VERSION_INFO" in case there is no version.
-  std::string GetVersion() const;
+  std::string GetModelVersion() const;
+
+  // Gets the labels version, or "NO_VERSION_INFO" in case there is no version.
+  std::string GetLabelsVersion() const;
 
  protected:
   static constexpr int kOutputTensorIndex = 0;
@@ -173,6 +176,9 @@ class NLClassifier : public core::BaseTaskApi<std::vector<core::Category>,
   // labels vector initialized from output tensor's associated file, if one
   // exists.
   std::unique_ptr<std::vector<std::string>> labels_vector_;
+  // labels version assigned from output tensor's associated file metadata,
+  // if one exists.
+  std::string labels_version_;
   std::unique_ptr<tflite::support::text::tokenizer::RegexTokenizer> tokenizer_;
 };
 
