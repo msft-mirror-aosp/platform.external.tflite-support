@@ -35,7 +35,6 @@ namespace metadata {
 
 namespace {
 constexpr char kMetadataBufferName[] = "TFLITE_METADATA";
-constexpr char kNoVersionInfo[] = "NO_VERSION_INFO";
 
 using ::absl::StatusCode;
 using ::flatbuffers::Offset;
@@ -291,6 +290,23 @@ ModelMetadataExtractor::GetAssociatedFile(const std::string& filename) const {
   return it->second;
 }
 
+tflite::support::StatusOr<std::string>
+ModelMetadataExtractor::GetModelVersion() const {
+  if (model_metadata_ == nullptr) {
+    return CreateStatusWithPayload(
+      StatusCode::kFailedPrecondition,
+      "No model metadata",
+      TfLiteSupportStatus::kMetadataNotFoundError);
+  }
+  if (model_metadata_->version() == nullptr) {
+    return CreateStatusWithPayload(
+      StatusCode::kNotFound,
+      "No version in model metadata",
+      TfLiteSupportStatus::kMetadataNotFoundError);
+  }
+  return model_metadata_->version()->str();
+}
+
 const flatbuffers::Vector<flatbuffers::Offset<tflite::TensorMetadata>>*
 ModelMetadataExtractor::GetInputTensorMetadata() const {
   if (model_metadata_ == nullptr ||
@@ -379,14 +395,6 @@ int ModelMetadataExtractor::GetOutputProcessUnitsCount() const {
   const Vector<flatbuffers::Offset<tflite::ProcessUnit>>* output_process_units =
       GetOutputProcessUnits();
   return output_process_units == nullptr ? 0 : output_process_units->size();
-}
-
-std::string ModelMetadataExtractor::GetVersion() const {
-  if (model_metadata_ == nullptr ||
-      model_metadata_->version() == nullptr) {
-    return kNoVersionInfo;
-  }
-  return model_metadata_->version()->str();
 }
 
 }  // namespace metadata
