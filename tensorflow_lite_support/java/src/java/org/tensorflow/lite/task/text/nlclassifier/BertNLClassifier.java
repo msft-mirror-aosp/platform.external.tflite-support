@@ -123,12 +123,23 @@ public class BertNLClassifier extends BaseTaskApi {
   }
 
   /**
-   * Gets the model version from the model metadata.
+   * Gets the model version from the model metadata,
+   * or "NO_VERSION_INFO" in case there is no version.
    *
    * @return The model version.
    */
-  public String getVersion() {
-    return getVersionNative(getNativeHandle());
+  public String getModelVersion() {
+    return getModelVersionNative(getNativeHandle());
+  }
+
+  /**
+   * Gets the labels version from the model metadata,
+   * or "NO_VERSION_INFO" in case there is no version.
+   *
+   * @return The labels version.
+   */
+  public String getLabelsVersion() {
+    return getLabelsVersionNative(getNativeHandle());
   }
 
   private static native long initJniWithByteBuffer(ByteBuffer modelBuffer);
@@ -137,7 +148,9 @@ public class BertNLClassifier extends BaseTaskApi {
 
   private static native List<Category> classifyNative(long nativeHandle, String text);
 
-  private static native String getVersionNative(long nativeHandle);
+  private static native String getModelVersionNative(long nativeHandle);
+
+  private static native String getLabelsVersionNative(long nativeHandle);
 
   @Override
   protected void deinit(long nativeHandle) {
