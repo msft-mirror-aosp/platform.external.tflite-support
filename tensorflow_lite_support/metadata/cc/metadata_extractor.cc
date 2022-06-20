@@ -290,6 +290,23 @@ ModelMetadataExtractor::GetAssociatedFile(const std::string& filename) const {
   return it->second;
 }
 
+tflite::support::StatusOr<std::string>
+ModelMetadataExtractor::GetModelVersion() const {
+  if (model_metadata_ == nullptr) {
+    return CreateStatusWithPayload(
+      StatusCode::kFailedPrecondition,
+      "No model metadata",
+      TfLiteSupportStatus::kMetadataNotFoundError);
+  }
+  if (model_metadata_->version() == nullptr) {
+    return CreateStatusWithPayload(
+      StatusCode::kNotFound,
+      "No version in model metadata",
+      TfLiteSupportStatus::kMetadataNotFoundError);
+  }
+  return model_metadata_->version()->str();
+}
+
 const flatbuffers::Vector<flatbuffers::Offset<tflite::TensorMetadata>>*
 ModelMetadataExtractor::GetInputTensorMetadata() const {
   if (model_metadata_ == nullptr ||
