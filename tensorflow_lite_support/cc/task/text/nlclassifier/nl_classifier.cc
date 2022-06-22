@@ -63,6 +63,7 @@ using ::tflite::task::core::PopulateTensor;
 namespace {
 constexpr int kRegexTokenizerInputTensorIndex = 0;
 constexpr int kRegexTokenizerProcessUnitIndex = 0;
+constexpr char kNoVersionInfo[] = "NO_VERSION_INFO";
 
 StatusOr<absl::string_view> CheckAndLoadFirstAssociatedFile(
     const flatbuffers::Vector<flatbuffers::Offset<tflite::AssociatedFile>>*
@@ -169,6 +170,11 @@ absl::Status NLClassifier::TrySetLabelFromMetadata(
     labels_vector_ =
         absl::make_unique<std::vector<std::string>>(LoadVocabFromBuffer(
             label_buffer.value().data(), label_buffer.value().size()));
+    if (associated_file->version() == nullptr) {
+      labels_version_ = kNoVersionInfo;
+    } else {
+      labels_version_ = associated_file->version()->str();
+    }
     return absl::OkStatus();
   } else {
     return CreateStatusWithPayload(
@@ -184,8 +190,17 @@ std::vector<Category> NLClassifier::Classify(const std::string& text) {
   return Infer(text).value();
 }
 
-std::string NLClassifier::GetVersion() const {
-  return GetMetadataExtractor()->GetVersion();
+std::string NLClassifier::GetModelVersion() const {
+  tflite::support::StatusOr<std::string> model_version =
+      GetMetadataExtractor()->GetModelVersion();
+  if (model_version.ok()) {
+    return model_version.value();
+  }
+  return kNoVersionInfo;
+}
+
+std::string NLClassifier::GetLabelsVersion() const {
+  return labels_version_;
 }
 
 absl::Status NLClassifier::Preprocess(
