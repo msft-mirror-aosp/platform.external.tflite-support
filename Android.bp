@@ -218,7 +218,7 @@ cc_library_shared {
         "tensorflow_lite_support/java/src/native/task/text/nlclassifier/bert_nlclassifier/bert_nl_classifier_jni.cc",
         "tensorflow_lite_support/java/src/native/task/text/nlclassifier/nl_classifier_jni.cc",
         "tensorflow_lite_support/java/src/native/task/text/nlclassifier/nl_classifier_jni_utils.cc",
-        "tensorflow_lite_support/java/src/native/task/core/minimal_op_resolver.cc",
+        "tensorflow_lite_support/java/src/native/task/core/builtin_op_resolver.cc",
         "tensorflow_lite_support/cc/utils/jni_utils.cc",
     ],
     shared_libs: ["liblog"],
