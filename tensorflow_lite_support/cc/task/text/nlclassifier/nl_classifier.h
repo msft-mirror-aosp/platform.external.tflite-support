@@ -109,13 +109,8 @@ class NLClassifier : public core::BaseTaskApi<std::vector<core::Category>,
       std::unique_ptr<tflite::OpResolver> resolver =
           absl::make_unique<tflite::ops::builtin::BuiltinOpResolver>());
 
-  // DEPRECATED (unannotated for backward compatibility).  Prefer using `ClassifyText`.
+  // Performs classification on a string input, returns classified results.
   std::vector<core::Category> Classify(const std::string& text);
-
-  // Performs classification on a string input, returns classified results or an
-  // error.
-  tflite::support::StatusOr<std::vector<core::Category>> ClassifyText(
-      const std::string& text);
 
   // Gets the model version, or "NO_VERSION_INFO" in case there is no version.
   std::string GetModelVersion() const;
