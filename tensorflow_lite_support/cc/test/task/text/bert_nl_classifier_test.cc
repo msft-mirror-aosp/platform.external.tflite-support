@@ -85,19 +85,15 @@ Category* GetCategoryWithClassName(const std::string& class_name,
 void verify_classifier(std::unique_ptr<BertNLClassifier> classifier,
                        bool verify_positive) {
   if (verify_positive) {
-    tflite::support::StatusOr<std::vector<core::Category>> results =
-        classifier->ClassifyText("unflinchingly bleak and desperate");
-
-    EXPECT_TRUE(results.ok());
-    EXPECT_GT(GetCategoryWithClassName("negative", results.value())->score,
-              GetCategoryWithClassName("positive", results.value())->score);
+    std::vector<core::Category> results =
+        classifier->Classify("unflinchingly bleak and desperate");
+    EXPECT_GT(GetCategoryWithClassName("negative", results)->score,
+              GetCategoryWithClassName("positive", results)->score);
   } else {
-    tflite::support::StatusOr<std::vector<core::Category>> results =
-        classifier->ClassifyText("it's a charming and often affecting journey");
-
-    EXPECT_TRUE(results.ok());
-    EXPECT_GT(GetCategoryWithClassName("positive", results.value())->score,
-              GetCategoryWithClassName("negative", results.value())->score);
+    std::vector<Category> results =
+        classifier->Classify("it's a charming and often affecting journey");
+    EXPECT_GT(GetCategoryWithClassName("positive", results)->score,
+              GetCategoryWithClassName("negative", results)->score);
   }
 }
 
@@ -155,12 +151,11 @@ TEST(BertNLClassifierTest, TestNLClassifier_ClassifyLongPositive_notOOB) {
       BertNLClassifier::CreateFromBuffer(model_buffer.data(), model_buffer.size());
   EXPECT_TRUE(classifier.ok());
 
-  tflite::support::StatusOr<std::vector<core::Category>> results =
-      classifier.value()->ClassifyText(ss_for_positive_review.str());
+  std::vector<core::Category> results =
+      classifier.value()->Classify(ss_for_positive_review.str());
 
-  EXPECT_TRUE(results.ok());
-  EXPECT_GT(GetCategoryWithClassName("positive", results.value())->score,
-            GetCategoryWithClassName("negative", results.value())->score);
+  EXPECT_GT(GetCategoryWithClassName("positive", results)->score,
+            GetCategoryWithClassName("negative", results)->score);
 }
 
 }  // namespace
