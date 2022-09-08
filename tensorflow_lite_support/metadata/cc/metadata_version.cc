@@ -45,9 +45,6 @@ enum class SchemaMembers {
   kSubGraphMetadataInputTensorGroups = 5,
   kSubGraphMetadataOutputTensorGroups = 6,
   kProcessUnitOptionsRegexTokenizerOptions = 7,
-  kContentPropertiesAudioProperties = 8,
-  kAssociatedFileTypeScannIndexFile = 9,
-  kAssociatedFileVersion = 10,
 };
 
 // Helper class to compare semantic versions in terms of three integers, major,
@@ -110,12 +107,6 @@ Version GetMemberVersion(SchemaMembers member) {
       return Version(1, 2, 0);
     case SchemaMembers::kProcessUnitOptionsRegexTokenizerOptions:
       return Version(1, 2, 1);
-    case SchemaMembers::kContentPropertiesAudioProperties:
-      return Version(1, 3, 0);
-    case SchemaMembers::kAssociatedFileTypeScannIndexFile:
-      return Version(1, 4, 0);
-    case SchemaMembers::kAssociatedFileVersion:
-      return Version(1, 4, 1);
     default:
       // Should never happen.
       TFLITE_LOG(FATAL) << "Unsupported schema member: "
@@ -157,18 +148,6 @@ void UpdateMinimumVersionForTable<tflite::AssociatedFile>(
         GetMemberVersion(SchemaMembers::kAssociatedFileTypeVocabulary),
         min_version);
   }
-
-  if (table->type() == AssociatedFileType_SCANN_INDEX_FILE) {
-    UpdateMinimumVersion(
-        GetMemberVersion(SchemaMembers::kAssociatedFileTypeScannIndexFile),
-        min_version);
-  }
-
-  if (table->version() != nullptr) {
-    UpdateMinimumVersion(
-        GetMemberVersion(SchemaMembers::kAssociatedFileVersion),
-        min_version);
-  }
 }
 
 template <>
@@ -198,19 +177,6 @@ void UpdateMinimumVersionForTable<tflite::ProcessUnit>(
 }
 
 template <>
-void UpdateMinimumVersionForTable<tflite::Content>(const tflite::Content* table,
-                                                   Version* min_version) {
-  if (table == nullptr) return;
-
-  // Checks the ContenProperties field.
-  if (table->content_properties_type() == ContentProperties_AudioProperties) {
-    UpdateMinimumVersion(
-        GetMemberVersion(SchemaMembers::kContentPropertiesAudioProperties),
-        min_version);
-  }
-}
-
-template <>
 void UpdateMinimumVersionForTable<tflite::TensorMetadata>(
     const tflite::TensorMetadata* table, Version* min_version) {
   if (table == nullptr) return;
@@ -222,9 +188,6 @@ void UpdateMinimumVersionForTable<tflite::TensorMetadata>(
   // Checks the process_units field.
   UpdateMinimumVersionForArray<tflite::ProcessUnit>(table->process_units(),
                                                     min_version);
-
-  // Check the content field.
-  UpdateMinimumVersionForTable<tflite::Content>(table->content(), min_version);
 }
 
 template <>
