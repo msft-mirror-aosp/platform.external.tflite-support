@@ -29,6 +29,8 @@ import org.tensorflow.lite.task.core.TestUtils;
 /** Test for {@link BertNLClassifier}. */
 public class BertNLClassifierTest {
     private static final String MODEL_FILE = "bert_nl_classifier.tflite";
+    // A classifier model with dynamic input tensors. Provided by the Android Rubidium team.
+    private static final String DYNAMIC_INPUT_MODEL_FILE = "rb_model.tflite";
 
     Category findCategoryWithLabel(List<Category> list, String label) {
         return list.stream()
@@ -68,6 +70,15 @@ public class BertNLClassifierTest {
     }
 
     @Test
+    public void classify_succeedsWithDynamicInputModelBuffer() throws IOException {
+        verifyDynamicInputResults(
+                BertNLClassifier.createFromBuffer(
+                        TestUtils.loadToDirectByteBuffer(
+                                ApplicationProvider.getApplicationContext(),
+                                DYNAMIC_INPUT_MODEL_FILE)));
+    }
+
+    @Test
     public void getModelVersion_succeedsWithVersionInMetadata() throws IOException {
         BertNLClassifier classifier = BertNLClassifier.createFromFile(
                 ApplicationProvider.getApplicationContext(), MODEL_FILE);
@@ -76,11 +87,27 @@ public class BertNLClassifierTest {
     }
 
     @Test
+    public void getModelVersion_succeedsWithDynamicInputModelVersion() throws IOException {
+        BertNLClassifier classifier = BertNLClassifier.createFromFile(
+                ApplicationProvider.getApplicationContext(), DYNAMIC_INPUT_MODEL_FILE);
+
+        assertThat(classifier.getModelVersion()).isEqualTo("2");
+    }
+
+    @Test
     public void getLabelsVersion_succeedsWithNoVersionInMetadata() throws IOException {
         BertNLClassifier classifier = BertNLClassifier.createFromFile(
                 ApplicationProvider.getApplicationContext(), MODEL_FILE);
 
         assertThat(classifier.getLabelsVersion()).isEqualTo("NO_VERSION_INFO");
+    }
+
+    @Test
+    public void getLabelsVersion_succeedsWithDynamicInputLabelsVersion() throws IOException {
+        BertNLClassifier classifier = BertNLClassifier.createFromFile(
+                ApplicationProvider.getApplicationContext(), DYNAMIC_INPUT_MODEL_FILE);
+
+        assertThat(classifier.getLabelsVersion()).isEqualTo("2");
     }
 
     private void verifyResults(BertNLClassifier classifier) {
@@ -92,5 +119,11 @@ public class BertNLClassifierTest {
                 classifier.classify("it's a charming and often affecting journey");
         assertThat(findCategoryWithLabel(positiveResults, "positive").getScore())
                 .isGreaterThan(findCategoryWithLabel(positiveResults, "negative").getScore());
+    }
+
+    private void verifyDynamicInputResults(BertNLClassifier classifier) {
+        List<Category> topics = classifier.classify("FooBarBaz");
+        assertThat(topics.size()).isEqualTo(446);
+        // TODO(ag/19888344): Add a test for a long text input.
     }
 }
