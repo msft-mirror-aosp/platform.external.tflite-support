@@ -245,6 +245,15 @@ absl::Status BertNLClassifier::InitializeFromMetadata() {
                         segment_ids_tensor.dims->data[1]),
         TfLiteSupportStatus::kInvalidInputTensorSizeError);
   }
+
+  // If some tensor does not have a size 2 dims_signature, then we
+  // assume the input is not dynamic.
+  if (ids_tensor.dims_signature->size != 2 ||
+      mask_tensor.dims_signature->size != 2 ||
+      segment_ids_tensor.dims_signature->size != 2) {
+    return absl::OkStatus();
+  }
+
   if (ids_tensor.dims_signature->data[1] == -1 &&
       mask_tensor.dims_signature->data[1] == -1 &&
       segment_ids_tensor.dims_signature->data[1] == -1) {
