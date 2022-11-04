@@ -221,6 +221,8 @@ cc_library_shared {
         "tensorflow_lite_support/java/src/native/task/core/builtin_op_resolver.cc",
         "tensorflow_lite_support/cc/utils/jni_utils.cc",
     ],
+    // TODO(b/247088924): Use linker_scripts here.
+    version_script: "tensorflow_lite_support/java/tflite_version_script.lds",
     shared_libs: ["liblog"],
     static_libs: [
         "libprotobuf-cpp-lite-ndk",
