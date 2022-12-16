@@ -64,7 +64,6 @@ constexpr char kSeparator[] = "[SEP]";
 constexpr int kTokenizerProcessUnitIndex = 0;
 }  // namespace
 
-// TODO(b/241507692) Add a unit test for a model with dynamic tensors.
 absl::Status BertNLClassifier::Preprocess(
     const std::vector<TfLiteTensor*>& input_tensors, const std::string& input) {
   auto* input_tensor_metadatas =

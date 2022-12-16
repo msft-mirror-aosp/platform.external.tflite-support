@@ -14,10 +14,17 @@ limitations under the License.
 ==============================================================================*/
 
 #include <jni.h>
-
+#include "tensorflow/lite/op_resolver.h"
 #include "tensorflow_lite_support/cc/task/text/nlclassifier/bert_nl_classifier.h"
 #include "tensorflow_lite_support/cc/utils/jni_utils.h"
 #include "tensorflow_lite_support/java/src/native/task/text/nlclassifier/nl_classifier_jni_utils.h"
+
+namespace tflite {
+namespace task {
+// To be provided by a link-time library
+extern std::unique_ptr<OpResolver> CreateOpResolver();
+}  // namespace task
+}  // namespace tflite
 
 namespace {
 
@@ -41,7 +48,8 @@ Java_org_tensorflow_lite_task_text_nlclassifier_BertNLClassifier_initJniWithByte
     JNIEnv* env, jclass thiz, jobject model_buffer) {
   auto model = GetMappedFileBuffer(env, model_buffer);
   tflite::support::StatusOr<std::unique_ptr<BertNLClassifier>> status =
-      BertNLClassifier::CreateFromBuffer(model.data(), model.size());
+      BertNLClassifier::CreateFromBuffer(model.data(), model.size(),
+                                         tflite::task::CreateOpResolver());
   if (status.ok()) {
     return reinterpret_cast<jlong>(status->release());
   } else {
@@ -56,7 +64,7 @@ extern "C" JNIEXPORT jlong JNICALL
 Java_org_tensorflow_lite_task_text_nlclassifier_BertNLClassifier_initJniWithFileDescriptor(
     JNIEnv* env, jclass thiz, jint fd) {
   tflite::support::StatusOr<std::unique_ptr<BertNLClassifier>> status =
-      BertNLClassifier::CreateFromFd(fd);
+      BertNLClassifier::CreateFromFd(fd, tflite::task::CreateOpResolver());
   if (status.ok()) {
     return reinterpret_cast<jlong>(status->release());
   } else {
