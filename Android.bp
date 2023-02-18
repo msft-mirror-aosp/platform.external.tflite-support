@@ -77,8 +77,8 @@ cc_library_static {
     ],
     apex_available: [
         "//apex_available:platform",
-        "com.android.extservices",
         "com.android.adservices",
+        "com.android.extservices",
     ],
 
     visibility: ["//external/libtextclassifier:__subpackages__"],
@@ -100,6 +100,7 @@ java_library {
     apex_available: [
         "//apex_available:platform",
         "com.android.adservices",
+        "com.android.extservices",
     ],
 }
 
@@ -131,6 +132,7 @@ cc_library_static {
     apex_available: [
         "//apex_available:platform",
         "com.android.adservices",
+        "com.android.extservices",
     ],
 }
 
@@ -188,6 +190,7 @@ cc_library_static {
     apex_available: [
         "//apex_available:platform",
         "com.android.adservices",
+        "com.android.extservices",
     ],
 }
 
@@ -209,6 +212,7 @@ java_library {
     apex_available: [
         "//apex_available:platform",
         "com.android.adservices",
+        "com.android.extservices",
     ],
 }
 
@@ -257,6 +261,7 @@ cc_library_shared {
     apex_available: [
         "//apex_available:platform",
         "com.android.adservices",
+        "com.android.extservices",
     ],
 }
 
@@ -273,6 +278,7 @@ java_library {
     apex_available: [
         "//apex_available:platform",
         "com.android.adservices",
+        "com.android.extservices",
     ],
 }
 
@@ -304,6 +310,7 @@ cc_library_static {
     apex_available: [
         "//apex_available:platform",
         "com.android.adservices",
+        "com.android.extservices",
     ],
 }
 
@@ -332,6 +339,7 @@ cc_library_static {
     apex_available: [
         "//apex_available:platform",
         "com.android.adservices",
+        "com.android.extservices",
     ],
 }
 
@@ -443,6 +451,7 @@ cc_library_static {
     apex_available: [
         "//apex_available:platform",
         "com.android.adservices",
+        "com.android.extservices",
     ],
 }
 
