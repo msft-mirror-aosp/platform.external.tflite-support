@@ -124,6 +124,5 @@ public class BertNLClassifierTest {
     private void verifyDynamicInputResults(BertNLClassifier classifier) {
         List<Category> topics = classifier.classify("FooBarBaz");
         assertThat(topics.size()).isEqualTo(446);
-        // TODO(ag/19888344): Add a test for a long text input.
     }
 }
