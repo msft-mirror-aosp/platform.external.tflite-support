@@ -77,8 +77,8 @@ cc_library_static {
     ],
     apex_available: [
         "//apex_available:platform",
-        "com.android.extservices",
         "com.android.adservices",
+        "com.android.extservices",
     ],
 
     visibility: ["//external/libtextclassifier:__subpackages__"],
@@ -100,6 +100,7 @@ java_library {
     apex_available: [
         "//apex_available:platform",
         "com.android.adservices",
+        "com.android.extservices",
     ],
 }
 
@@ -131,6 +132,7 @@ cc_library_static {
     apex_available: [
         "//apex_available:platform",
         "com.android.adservices",
+        "com.android.extservices",
     ],
 }
 
@@ -188,6 +190,7 @@ cc_library_static {
     apex_available: [
         "//apex_available:platform",
         "com.android.adservices",
+        "com.android.extservices",
     ],
 }
 
@@ -209,6 +212,7 @@ java_library {
     apex_available: [
         "//apex_available:platform",
         "com.android.adservices",
+        "com.android.extservices",
     ],
 }
 
@@ -221,7 +225,6 @@ cc_library_shared {
         "tensorflow_lite_support/java/src/native/task/core/builtin_op_resolver.cc",
         "tensorflow_lite_support/cc/utils/jni_utils.cc",
     ],
-    // TODO(b/247088924): Use linker_scripts here.
     version_script: "tensorflow_lite_support/java/tflite_version_script.lds",
     shared_libs: ["liblog"],
     static_libs: [
@@ -242,7 +245,6 @@ cc_library_shared {
         "tensorflow_headers",
         "flatbuffer_headers",
         "jni_headers",
-        "liblog_headers",
         "libtextclassifier_flatbuffer_headers",
     ],
     generated_headers: [
@@ -257,6 +259,7 @@ cc_library_shared {
     apex_available: [
         "//apex_available:platform",
         "com.android.adservices",
+        "com.android.extservices",
     ],
 }
 
@@ -273,6 +276,7 @@ java_library {
     apex_available: [
         "//apex_available:platform",
         "com.android.adservices",
+        "com.android.extservices",
     ],
 }
 
@@ -304,6 +308,7 @@ cc_library_static {
     apex_available: [
         "//apex_available:platform",
         "com.android.adservices",
+        "com.android.extservices",
     ],
 }
 
@@ -332,6 +337,7 @@ cc_library_static {
     apex_available: [
         "//apex_available:platform",
         "com.android.adservices",
+        "com.android.extservices",
     ],
 }
 
@@ -443,6 +449,7 @@ cc_library_static {
     apex_available: [
         "//apex_available:platform",
         "com.android.adservices",
+        "com.android.extservices",
     ],
 }
 
