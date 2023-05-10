@@ -30,7 +30,7 @@ import org.tensorflow.lite.task.core.TestUtils;
 public class BertNLClassifierTest {
     private static final String MODEL_FILE = "bert_nl_classifier.tflite";
     // A classifier model with dynamic input tensors. Provided by the Android Rubidium team.
-    private static final String DYNAMIC_INPUT_MODEL_FILE = "rb_model.tflite";
+    private static final String DYNAMIC_INPUT_MODEL_FILE = "rb_v4_model.tflite";
 
     Category findCategoryWithLabel(List<Category> list, String label) {
         return list.stream()
@@ -91,7 +91,7 @@ public class BertNLClassifierTest {
         BertNLClassifier classifier = BertNLClassifier.createFromFile(
                 ApplicationProvider.getApplicationContext(), DYNAMIC_INPUT_MODEL_FILE);
 
-        assertThat(classifier.getModelVersion()).isEqualTo("2");
+        assertThat(classifier.getModelVersion()).isEqualTo("4");
     }
 
     @Test
@@ -124,6 +124,5 @@ public class BertNLClassifierTest {
     private void verifyDynamicInputResults(BertNLClassifier classifier) {
         List<Category> topics = classifier.classify("FooBarBaz");
         assertThat(topics.size()).isEqualTo(446);
-        // TODO(ag/19888344): Add a test for a long text input.
     }
 }
