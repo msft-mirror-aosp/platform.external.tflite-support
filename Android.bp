@@ -77,8 +77,8 @@ cc_library_static {
     ],
     apex_available: [
         "//apex_available:platform",
-        "com.android.extservices",
         "com.android.adservices",
+        "com.android.extservices",
     ],
 
     visibility: ["//external/libtextclassifier:__subpackages__"],
@@ -100,6 +100,7 @@ java_library {
     apex_available: [
         "//apex_available:platform",
         "com.android.adservices",
+        "com.android.extservices",
     ],
 }
 
@@ -131,6 +132,7 @@ cc_library_static {
     apex_available: [
         "//apex_available:platform",
         "com.android.adservices",
+        "com.android.extservices",
     ],
 }
 
@@ -188,6 +190,7 @@ cc_library_static {
     apex_available: [
         "//apex_available:platform",
         "com.android.adservices",
+        "com.android.extservices",
     ],
 }
 
@@ -209,6 +212,7 @@ java_library {
     apex_available: [
         "//apex_available:platform",
         "com.android.adservices",
+        "com.android.extservices",
     ],
 }
 
@@ -218,9 +222,11 @@ cc_library_shared {
         "tensorflow_lite_support/java/src/native/task/text/nlclassifier/bert_nlclassifier/bert_nl_classifier_jni.cc",
         "tensorflow_lite_support/java/src/native/task/text/nlclassifier/nl_classifier_jni.cc",
         "tensorflow_lite_support/java/src/native/task/text/nlclassifier/nl_classifier_jni_utils.cc",
-        "tensorflow_lite_support/java/src/native/task/core/builtin_op_resolver.cc",
+        "tensorflow_lite_support/java/src/native/task/core/rbtml_op_resolver.cc",
+        "tensorflow_lite_support/custom_ops/kernel/unsorted_segment.cc",
         "tensorflow_lite_support/cc/utils/jni_utils.cc",
     ],
+    version_script: "tensorflow_lite_support/java/tflite_version_script.lds",
     shared_libs: ["liblog"],
     static_libs: [
         "libprotobuf-cpp-lite-ndk",
@@ -240,7 +246,6 @@ cc_library_shared {
         "tensorflow_headers",
         "flatbuffer_headers",
         "jni_headers",
-        "liblog_headers",
         "libtextclassifier_flatbuffer_headers",
     ],
     generated_headers: [
@@ -255,6 +260,7 @@ cc_library_shared {
     apex_available: [
         "//apex_available:platform",
         "com.android.adservices",
+        "com.android.extservices",
     ],
 }
 
@@ -265,9 +271,13 @@ java_library {
     srcs: [
         "tensorflow_lite_support/java/src/java/org/tensorflow/lite/task/core/*.java",
     ],
+    optimize: {
+        proguard_flags_files: ["proguard.flags"],
+    },
     apex_available: [
         "//apex_available:platform",
         "com.android.adservices",
+        "com.android.extservices",
     ],
 }
 
@@ -299,6 +309,7 @@ cc_library_static {
     apex_available: [
         "//apex_available:platform",
         "com.android.adservices",
+        "com.android.extservices",
     ],
 }
 
@@ -327,6 +338,7 @@ cc_library_static {
     apex_available: [
         "//apex_available:platform",
         "com.android.adservices",
+        "com.android.extservices",
     ],
 }
 
@@ -438,6 +450,7 @@ cc_library_static {
     apex_available: [
         "//apex_available:platform",
         "com.android.adservices",
+        "com.android.extservices",
     ],
 }
 
