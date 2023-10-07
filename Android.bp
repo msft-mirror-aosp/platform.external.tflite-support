@@ -65,7 +65,7 @@ cc_library_static {
     ],
     generated_headers: [
         "tflite_support_spm_config",
-        "tflite_support_spm_encoder_config"
+        "tflite_support_spm_encoder_config",
     ],
     header_libs: [
         "tensorflow_headers",
@@ -400,7 +400,7 @@ android_test {
     static_libs: [
         "androidx.test.core",
         "tensorflowlite_java",
-        "truth-prebuilt",
+        "truth",
         "tflite_support_classifiers_java",
         "tflite_support_test_utils_java",
     ],
@@ -461,7 +461,6 @@ genrule {
     out: ["tensorflow_lite_support/metadata/metadata_schema_generated.h"],
     defaults: ["tflite_support_fbgen"],
 }
-
 
 // -----------------
 // Generate headers with FlatBuffer schema compiler.
