@@ -65,7 +65,7 @@ cc_library_static {
     ],
     generated_headers: [
         "tflite_support_spm_config",
-        "tflite_support_spm_encoder_config"
+        "tflite_support_spm_encoder_config",
     ],
     header_libs: [
         "tensorflow_headers",
@@ -400,7 +400,7 @@ android_test {
     static_libs: [
         "androidx.test.core",
         "tensorflowlite_java",
-        "truth-prebuilt",
+        "truth",
         "tflite_support_classifiers_java",
         "tflite_support_test_utils_java",
     ],
@@ -454,37 +454,35 @@ cc_library_static {
     ],
 }
 
-// Add header file targets.
-genrule {
-    name: "tflite_support_metadata_schema",
-    srcs: ["tensorflow_lite_support/metadata/metadata_schema.fbs"],
-    out: ["tensorflow_lite_support/metadata/metadata_schema_generated.h"],
-    defaults: ["tflite_support_fbgen"],
-}
-
-
 // -----------------
 // Generate headers with FlatBuffer schema compiler.
 // -----------------
-genrule_defaults {
-    name: "tflite_support_fbgen",
+
+FLATC_ARGS = "$(location flatc) --cpp --no-union-value-namespacing --gen-object-api --keep-prefix -I external/tflite-support -o $$(dirname $(out)) "
+
+genrule {
+    name: "tflite_support_metadata_schema",
     tools: ["flatc"],
-    // "depfile" is used here in conjunction with flatc's -M to gather the deps
-    cmd: "$(location flatc) --cpp --no-union-value-namespacing --gen-object-api --keep-prefix -I external/tflite-support -M $(in) >$(depfile) && " +
-        "$(location flatc) --cpp --no-union-value-namespacing --gen-object-api --keep-prefix -I external/tflite-support -o $$(dirname $(out)) $(in)",
-    depfile: true,
+    srcs: ["tensorflow_lite_support/metadata/metadata_schema.fbs"],
+    cmd: FLATC_ARGS + " $(in)",
+    out: ["tensorflow_lite_support/metadata/metadata_schema_generated.h"],
 }
 
 genrule {
     name: "tflite_support_spm_config",
+    tools: ["flatc"],
     srcs: ["tensorflow_lite_support/custom_ops/kernel/sentencepiece/config.fbs"],
+    cmd: FLATC_ARGS + " $(in)",
     out: ["tensorflow_lite_support/custom_ops/kernel/sentencepiece/config_generated.h"],
-    defaults: ["tflite_support_fbgen"],
 }
 
 genrule {
     name: "tflite_support_spm_encoder_config",
-    srcs: ["tensorflow_lite_support/custom_ops/kernel/sentencepiece/encoder_config.fbs"],
+    tools: ["flatc"],
+    srcs: [
+        "tensorflow_lite_support/custom_ops/kernel/sentencepiece/config.fbs",
+        "tensorflow_lite_support/custom_ops/kernel/sentencepiece/encoder_config.fbs",
+    ],
+    cmd: FLATC_ARGS + " $(location tensorflow_lite_support/custom_ops/kernel/sentencepiece/encoder_config.fbs)",
     out: ["tensorflow_lite_support/custom_ops/kernel/sentencepiece/encoder_config_generated.h"],
-    defaults: ["tflite_support_fbgen"],
 }
