@@ -227,7 +227,10 @@ cc_library_shared {
         "tensorflow_lite_support/cc/utils/jni_utils.cc",
     ],
     version_script: "tensorflow_lite_support/java/tflite_version_script.lds",
-    shared_libs: ["liblog"],
+    shared_libs: [
+        "liblog",
+        "libz",
+    ],
     static_libs: [
         "libprotobuf-cpp-lite-ndk",
         "libtextclassifier_abseil",
@@ -356,6 +359,7 @@ cc_test {
     min_sdk_version: "30",
     shared_libs: [
         "liblog",
+        "libz",
     ],
     static_libs: [
         "libprotobuf-cpp-lite-ndk",
