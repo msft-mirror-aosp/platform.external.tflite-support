@@ -409,7 +409,7 @@ android_test {
         "tflite_support_test_utils_java",
     ],
     libs: [
-        "android.test.base",
+        "android.test.base.stubs.system",
         "android.test.mock.stubs",
     ],
     test_suites: [
