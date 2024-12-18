@@ -16,6 +16,7 @@ limitations under the License.
 #include "tensorflow_lite_support/cc/text/tokenizers/tokenizer_utils.h"
 
 #include "absl/status/status.h"
+#include "absl/strings/str_cat.h"
 #include "tensorflow_lite_support/cc/common.h"
 #include "tensorflow_lite_support/cc/port/status_macros.h"
 #include "tensorflow_lite_support/cc/text/tokenizers/regex_tokenizer.h"
