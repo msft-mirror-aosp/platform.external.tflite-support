@@ -16,7 +16,6 @@ limitations under the License.
 #include "tensorflow_lite_support/cc/utils/jni_utils.h"
 
 #include <dlfcn.h>
-#include <stdlib.h>
 #include <string.h>
 
 #include "absl/memory/memory.h"  // from @com_google_absl
