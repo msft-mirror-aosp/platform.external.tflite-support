@@ -6,7 +6,10 @@ package(
     licenses = ["notice"],  # Apache 2.0
 )
 
-exports_files(["LICENSE"])
+exports_files([
+    "LICENSE",
+    "api_visibility.bzl",
+])
 
 package_group(
     name = "users",
